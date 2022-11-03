@@ -1,0 +1,77 @@
+1.
+
+SELECT e.lname, e.fname, e.eid, 
+CASE WHEN e.eid = d.doc_eid THEN d.specialty WHEN e.eid = n.nid THEN 'Nurse' 
+	 WHEN e.eid = r.rid THEN 'Receptionist' END AS EmpType
+FROM employees e LEFT JOIN doctor d ON e.eid = d.doc_eid
+LEFT JOIN nurse n ON e.eid = n.nid
+LEFT JOIN receptionist r ON e.eid = r.rid
+ORDER BY e.lname ASC
+
+2.
+
+SELECT e.lname, e.fname, e.eid, 
+CASE WHEN e.eid = d.doc_eid THEN d.specialty WHEN e.eid = n.nid THEN 'Nurse' 
+	 WHEN e.eid = r.rid THEN 'Receptionist' END AS EmpType
+FROM employees e LEFT JOIN doctor d ON e.eid = d.doc_eid
+LEFT JOIN nurse n ON e.eid = n.nid
+LEFT JOIN receptionist r ON e.eid = r.rid
+ORDER BY EmpType ASC,  e.lname ASC
+
+3.
+
+SELECT e.fname, e.lname, e.eid, d.specialty
+FROM employees e LEFT JOIN doctor d ON e.eid = d.doc_eid
+WHERE d.specialty IS NOT NULL
+ORDER BY d.specialty ASC, e.lname ASC
+
+4.
+
+SELECT count(d.specialty), d.specialty
+FROM doctor d 
+GROUP BY d.specialty
+ORDER BY d.specialty ASC
+
+5.
+
+SELECT e.fname, e.lname, e.eid
+FROM employees e LEFT JOIN nurse n ON e.eid = n.nid
+
+6.
+
+SELECT e.fname, e.lname, CASE WHEN e.eid = d.doc_eid THEN d.specialty WHEN e.eid = n.nid THEN 'Nurse' 
+	 WHEN e.eid = r.rid THEN 'Receptionist' END AS EmpType, e.salary
+FROM employees e LEFT JOIN doctor d ON e.eid = d.doc_eid
+LEFT JOIN nurse n ON e.eid = n.nid
+LEFT JOIN receptionist r ON e.eid = r.rid
+WHERE e.salary > 85000
+
+7.
+
+SELECT p.fname, p.lname, p.gender, p.pid, p.room_num
+FROM patient p LEFT JOIN room r ON p.room_num= r.room_num
+WHERE p.age::INTEGER > 65 AND (r.end_date < CURRENT_DATE)
+
+8.
+
+SELECT p.fname, p.lname, p.pid
+FROM patient p LEFT JOIN room r ON p.room_num= r.room_num
+WHERE (EXTRACT(MONTH FROM r.end_date) = 6)
+
+9.
+
+SELECT p.fname, p.lname, p.room_num
+FROM patient p LEFT JOIN room r ON p.room_num= r.room_num
+WHERE r.er = true AND (r.end_date < CURRENT_DATE)
+
+10.
+
+SELECT p.fname, p.lname, p.room_num, CASE WHEN r.er = true THEN 'ER' WHEN r.er = false 
+THEN 'Regular' END AS RoomType, e.fname, e.lname
+FROM patient p LEFT JOIN room r ON p.room_num= r.room_num LEFT JOIN employees e ON e.eid = r.nurse_id 
+WHERE r.end_date < CURRENT_DATE
+
+15. 
+
+SELECT AVG(price)
+FROM treatment
